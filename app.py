@@ -29,6 +29,10 @@ px.defaults.color_discrete_sequence = [
 
 # Temiz beyaz plotly teması
 pio.templates.default = "simple_white"
+# Tüm figürlerde arka planları dashboard ile aynı yap
+pio.templates["simple_white"].layout.paper_bgcolor = "#F3F4F6"   # Dashboard arka planı
+pio.templates["simple_white"].layout.plot_bgcolor = "#F3F4F6"
+
 
 # -------- HAFİF, ŞIK GENEL STİL --------
 st.markdown("""
