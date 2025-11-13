@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 
-# -------- PAGE CONFIG (LIGHT & CLEAN) --------
+# -------- PAGE CONFIG (LIGHT & ELEGANT) --------
 st.set_page_config(
     page_title="B2B Intelligent Dashboard",
     page_icon="📊",
@@ -13,19 +13,79 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Tek ve tutarlı renk paleti (mavi)
-PRIMARY_COLOR = "#2563EB"
-SECONDARY_COLOR = "#F97316"
+# -------- COLOR PALETTE (TUTARLI & ŞIK) --------
+PRIMARY_COLOR = "#2563EB"   # mavi
+SECONDARY_COLOR = "#F97316" # turuncu
+ACCENT_GREEN = "#10B981"    # yeşil
+ACCENT_PURPLE = "#7C3AED"   # mor
 
-px.defaults.color_discrete_sequence = [PRIMARY_COLOR]
+# Tüm px grafiklerinde aynı paleti kullan
+px.defaults.color_discrete_sequence = [
+    PRIMARY_COLOR,
+    ACCENT_PURPLE,
+    SECONDARY_COLOR,
+    ACCENT_GREEN,
+]
+
+# Temiz beyaz plotly teması
 pio.templates.default = "simple_white"
 
+# -------- HAFİF, ŞIK GENEL STİL --------
+st.markdown("""
+<style>
+/* Arka planı çok hafif gri yap – düz beyazdan daha şık durur */
+.stApp {
+  background-color: #F3F4F6;
+}
 
-st.title("📊 B2B Intelligent Sales Dashboard")
-st.write(
-    "This dashboard is built with **Streamlit** using the B2B Transaction dataset. "
-    "It includes KPIs, interactive visuals and an **ABC–XYZ stock classification** analysis."
-)
+/* Ana içerik kart gibi dursun */
+[data-testid="stAppViewContainer"] > .main {
+  padding-top: 20px;
+}
+
+/* Başlıklar */
+h1, h2, h3 {
+  color: #111827;
+  font-weight: 700;
+}
+
+/* Normal metinler */
+body, p, span, label {
+  color: #111827;
+}
+
+/* Sekmeler – hafif pill görünümü */
+[data-baseweb="tab-list"] {
+  gap: 0.4rem;
+}
+[data-baseweb="tab"] {
+  background-color: #E5E7EB;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  color: #374151;
+  font-weight: 500;
+}
+[data-baseweb="tab"][aria-selected="true"] {
+  background-color: #2563EB;
+  color: #F9FAFB;
+}
+
+/* DataFrame hafif kart gibi */
+[data-testid="stDataFrame"] {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+}
+
+/* Scrollbar daha ince ama belirgin */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #9CA3AF;
+  border-radius: 4px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # -----------------------------
 # DATA LOADING
