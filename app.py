@@ -248,8 +248,9 @@ with tab2:
     )
     st.plotly_chart(fig_box, use_container_width=True)
 
-    st.plotly_chart(fig_prod, use_container_width=True)
-    # =======================
+   st.plotly_chart(fig_prod, use_container_width=True, key="top_15_products")
+
+# =======================
 # Pareto Chart (Revenue)
 # =======================
 
@@ -294,7 +295,7 @@ fig.update_layout(
     xaxis_tickangle=-45
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, key="pareto_revenue")
 
 
 # -----------------------------
