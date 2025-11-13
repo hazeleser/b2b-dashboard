@@ -205,7 +205,7 @@ with tab1:
 
     st.caption("Key figures based on current filters.")
 
-       st.subheader("📌 Key Performance Indicators (KPIs)")
+    st.subheader("📌 Key Performance Indicators (KPIs)")
     st.caption("All KPIs are calculated based on the current filters.")
 
     total_revenue = df_filtered["SalesRevenue"].sum()
