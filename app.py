@@ -298,6 +298,65 @@ with tab1:
 
     st.dataframe(table_df)
 
+    # =======================
+    # Pareto Chart – Categories
+    # =======================
+    st.markdown("#### Pareto Chart – Categories by Revenue")
+
+    # 1) Kategori bazında revenue’u büyükten küçüğe sırala
+    pareto_cat = (
+        df_filtered.groupby("Category")["SalesRevenue"]
+        .sum()
+        .reset_index()
+        .sort_values("SalesRevenue", ascending=False)
+    )
+
+    # 2) Kümülatif toplam ve yüzde
+    pareto_cat["cum_sum"] = pareto_cat["SalesRevenue"].cumsum()
+    pareto_cat["cum_pct"] = pareto_cat["cum_sum"] / pareto_cat["SalesRevenue"].sum() * 100
+
+    # 3) Şekil: bar + çizgi (klasik Pareto)
+    fig_pareto_cat = go.Figure()
+
+    # Barlar – kategori revenue
+    fig_pareto_cat.add_bar(
+        x=pareto_cat["Category"],
+        y=pareto_cat["SalesRevenue"],
+        name="Revenue"
+    )
+
+    # Kümülatif % çizgisi – sağ eksen
+    fig_pareto_cat.add_scatter(
+        x=pareto_cat["Category"],
+        y=pareto_cat["cum_pct"],
+        mode="lines+markers",
+        name="Cumulative %",
+        yaxis="y2"
+    )
+
+    # 80% yatay çizgi
+    fig_pareto_cat.add_shape(
+        type="line",
+        xref="paper", x0=0, x1=1,          # tüm grafik boyunca
+        yref="y2",    y0=80, y1=80,        # %80 seviyesinde
+        line=dict(color="green", dash="dash")
+    )
+
+    # 4) Layout
+    fig_pareto_cat.update_layout(
+        title="Pareto Chart – Categories (80/20 Rule)",
+        xaxis=dict(title="Category"),
+        yaxis=dict(title="Revenue"),
+        yaxis2=dict(
+            title="Cumulative %",
+            overlaying="y",
+            side="right",
+            range=[0, 110]
+        ),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+
+    st.plotly_chart(fig_pareto_cat, use_container_width=True)
 
 
 # -----------------------------
