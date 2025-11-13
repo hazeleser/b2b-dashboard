@@ -225,7 +225,7 @@ with tab1:
     # =======================
     # Pareto Chart – Top 15 Products
     # =======================
-    st.markdown("#### Pareto Chart – Top 10 Products by Revenue")
+    st.markdown("#### Pareto Chart – Top 15 Products by Revenue")
 
     top_n = 15  # istersen 5 / 15 yapabilirsin
 
@@ -286,14 +286,14 @@ with tab1:
     st.plotly_chart(fig_pareto, use_container_width=True)
 
     # 5) Mini tablo: her ürünün payını göster
-    st.markdown("##### Top 10 Product Contribution Table")
+    st.markdown("##### Top 15 Product Contribution Table")
     table_df = pareto_df.copy()
     table_df["share_pct"] = table_df["SalesRevenue"] / table_df["SalesRevenue"].sum() * 100
     table_df = table_df[["StockCode", "Description", "SalesRevenue", "cum_pct", "share_pct"]]
     table_df.rename(columns={
         "SalesRevenue": "Revenue",
         "cum_pct": "Cumulative %",
-        "share_pct": "Share in Top 10 %"
+        "share_pct": "Share in Top 15 %"
     }, inplace=True)
 
     st.dataframe(table_df)
