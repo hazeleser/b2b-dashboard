@@ -5,19 +5,74 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 
-# Plotly için genel tema
-pio.templates.default = "simple_white"
-px.defaults.color_discrete_sequence = ["#2563EB", "#F97316", "#22C55E", "#E11D48", "#A855F7"]
-
-# -----------------------------
-# PAGE CONFIG
-# -----------------------------
+# -------- PAGE CONFIG (BOLD & PROFESSIONAL) --------
 st.set_page_config(
     page_title="B2B Intelligent Dashboard",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# -------- GLOBAL PLOTLY THEME --------
+pio.templates.default = "plotly_dark"
+px.defaults.color_discrete_sequence = ["#F97316", "#3B82F6", "#22C55E", "#E11D48", "#A855F7"]
+
+# -------- GLOBAL CSS (BACKGROUND, FONT, BOLD LOOK) --------
+st.markdown("""
+<style>
+/* Genel arka plan: koyu, profesyonel */
+.stApp {
+  background-color: #020617;
+}
+
+/* Sidebar arka plan */
+[data-testid="stSidebar"] {
+  background-color: #020617;
+}
+
+/* Başlık font ve renkleri */
+h1, h2, h3, h4 {
+  color: #F9FAFB;
+  font-weight: 700;
+}
+
+/* Normal metin */
+body, p, span, label {
+  color: #E5E7EB !important;
+}
+
+/* Sekme başlıkları */
+[data-baseweb="tab-list"] {
+  gap: 0.5rem;
+}
+[data-baseweb="tab"] {
+  background-color: #0F172A;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  color: #E5E7EB;
+  font-weight: 500;
+}
+[data-baseweb="tab"][aria-selected="true"] {
+  background-color: #F97316;
+  color: #0B1120;
+}
+
+/* Dataframe arka planını biraz daha okunur yapalım */
+[data-testid="stDataFrame"] {
+  background-color: #020617;
+}
+
+/* Scrollbar daha ince */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 st.title("📊 B2B Intelligent Sales Dashboard")
 st.write(
@@ -150,13 +205,62 @@ with tab1:
 
     st.caption("Key figures based on current filters.")
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Total Revenue", f"{total_revenue:,.2f} ₺")
-    col2.metric("Total Quantity", f"{total_quantity:,.0f}")
-    col3.metric("Number of Invoices", f"{total_invoices:,}")
-    col4.metric("Number of Customers", f"{total_customers:,}")
+       st.subheader("📌 Key Performance Indicators (KPIs)")
+    st.caption("All KPIs are calculated based on the current filters.")
+
+    total_revenue = df_filtered["SalesRevenue"].sum()
+    total_quantity = df_filtered["Quantity"].sum()
+    total_invoices = df_filtered["InvoiceNo"].nunique()
+    total_customers = df_filtered["CustomerID"].nunique()
+
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+    with kpi1:
+        st.markdown(f"""
+        <div style="background:linear-gradient(135deg,#F97316,#EA580C);
+                    padding:16px;border-radius:14px;">
+            <div style="font-size:13px;color:#FFF;font-weight:500;">Total Revenue</div>
+            <div style="font-size:22px;color:#FFF;font-weight:700;margin-top:4px;">
+                {total_revenue:,.2f} ₺
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi2:
+        st.markdown(f"""
+        <div style="background:#0F172A;padding:16px;border-radius:14px;
+                    border:1px solid #1E293B;">
+            <div style="font-size:13px;color:#9CA3AF;font-weight:500;">Total Quantity</div>
+            <div style="font-size:22px;color:#E5E7EB;font-weight:700;margin-top:4px;">
+                {total_quantity:,.0f}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi3:
+        st.markdown(f"""
+        <div style="background:#0F172A;padding:16px;border-radius:14px;
+                    border:1px solid #1E293B;">
+            <div style="font-size:13px;color:#9CA3AF;font-weight:500;">Number of Invoices</div>
+            <div style="font-size:22px;color:#E5E7EB;font-weight:700;margin-top:4px;">
+                {total_invoices:,}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with kpi4:
+        st.markdown(f"""
+        <div style="background:#0F172A;padding:16px;border-radius:14px;
+                    border:1px solid #1E293B;">
+            <div style="font-size:13px;color:#9CA3AF;font-weight:500;">Number of Customers</div>
+            <div style="font-size:22px;color:#E5E7EB;font-weight:700;margin-top:4px;">
+                {total_customers:,}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.divider()
+
 
     # Layout for charts
     c1, c2 = st.columns(2)
