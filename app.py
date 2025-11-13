@@ -163,7 +163,6 @@ with tab1:
             title="Total Revenue by Category",
             text_auto=".2s"
         )
-        st.plotly_chart(fig_cat, use_container_width=True)
 
     with c2:
         st.markdown("#### Revenue by City (Top 10)")
