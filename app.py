@@ -271,13 +271,6 @@ with tab1:
         <span style="font-size:14px;color:#9CA3AF;">Revenue Breakdown</span>
     </div>
     """, unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("#### Revenue by Category")
-        ...
-    with c2:
-        st.markdown("#### Revenue by City (Top 10)")
-        ...
 
     # Revenue by Category
     with c1:
