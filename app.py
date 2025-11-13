@@ -3,11 +3,21 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.io as pio
+
+# Plotly için genel tema
+pio.templates.default = "simple_white"
+px.defaults.color_discrete_sequence = ["#2563EB", "#F97316", "#22C55E", "#E11D48", "#A855F7"]
 
 # -----------------------------
 # PAGE CONFIG
 # -----------------------------
-st.set_page_config(page_title="B2B Intelligent Dashboard", layout="wide")
+st.set_page_config(
+    page_title="B2B Intelligent Dashboard",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 st.title("📊 B2B Intelligent Sales Dashboard")
 st.write(
@@ -121,10 +131,10 @@ st.write(
 # TABS (LIKE HOCANIN ÖRNEKLERİ)
 # -----------------------------
 tab1, tab2, tab3, tab4 = st.tabs([
-    "Overview & KPIs",
-    "Descriptive Statistics",
-    "ABC–XYZ Analysis",
-    "Raw Data"
+    "📊 Overview & KPIs",
+    "📈 Descriptive Stats",
+    "📦 ABC–XYZ Analysis",
+    "📄 Raw Data"
 ])
 
 # -----------------------------
@@ -137,6 +147,8 @@ with tab1:
     total_quantity = df_filtered["Quantity"].sum()
     total_invoices = df_filtered["InvoiceNo"].nunique()
     total_customers = df_filtered["CustomerID"].nunique()
+
+    st.caption("Key figures based on current filters.")
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Total Revenue", f"{total_revenue:,.2f} ₺")
@@ -271,17 +283,20 @@ with tab1:
 
     # 4) Layout / eksen ayarları
     fig_pareto.update_layout(
-        title=f"Pareto Chart – Top {top_n} Products (80/20 View)",
-        xaxis=dict(title="Products", tickangle=-45),
-        yaxis=dict(title="Revenue"),
-        yaxis2=dict(
-            title="Cumulative %",
-            overlaying="y",
-            side="right",
-            range=[0, 110]
-        ),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
+    template="simple_white",
+    title=f"Pareto Chart – Top {top_n} Products (80/20 View)",
+    xaxis=dict(title="Products", tickangle=-45),
+    yaxis=dict(title="Revenue"),
+    yaxis2=dict(
+        title="Cumulative %",
+        overlaying="y",
+        side="right",
+        range=[0, 110]
+    ),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    margin=dict(l=40, r=40, t=60, b=80)
+)
+
 
     st.plotly_chart(fig_pareto, use_container_width=True)
 
@@ -346,18 +361,21 @@ with tab1:
     )
 
     # 4) Layout
-    fig_top_cat.update_layout(
-        title=f"Pareto Chart – Top {top_cat_n} Categories (80/20 Rule)",
-        xaxis=dict(title="Category"),
-        yaxis=dict(title="Revenue"),
-        yaxis2=dict(
-            title="Cumulative %",
-            overlaying="y",
-            side="right",
-            range=[0, 110]
-        ),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
+   fig_top_cat.update_layout(
+    template="simple_white",
+    title=f"Pareto Chart – Top {top_cat_n} Categories (80/20 Rule)",
+    xaxis=dict(title="Category"),
+    yaxis=dict(title="Revenue"),
+    yaxis2=dict(
+        title="Cumulative %",
+        overlaying="y",
+        side="right",
+        range=[0, 110]
+    ),
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    margin=dict(l=40, r=40, t=60, b=80)
+)
+
 
     st.plotly_chart(fig_top_cat, use_container_width=True)
 
