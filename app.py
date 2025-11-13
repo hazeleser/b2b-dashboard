@@ -222,12 +222,12 @@ with tab1:
     fig_prod.update_layout(xaxis_tickangle=-45)
     st.plotly_chart(fig_prod, use_container_width=True, key="top_15_products")
 
-        # =======================
-    # Pareto Chart – Top 10 Products
+    # =======================
+    # Pareto Chart – Top 15 Products
     # =======================
     st.markdown("#### Pareto Chart – Top 10 Products by Revenue")
 
-    top_n = 10  # istersen 5 / 15 yapabilirsin
+    top_n = 15  # istersen 5 / 15 yapabilirsin
 
     # 1) Ürün bazında revenue'u büyükten küçüğe sırala ve Top N al
     pareto_df = (
