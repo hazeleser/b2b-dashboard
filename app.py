@@ -148,6 +148,7 @@ with tab1:
     # Layout for charts
     c1, c2 = st.columns(2)
 
+    # Revenue by Category
     with c1:
         st.markdown("#### Revenue by Category")
         revenue_by_cat = (
@@ -163,7 +164,9 @@ with tab1:
             title="Total Revenue by Category",
             text_auto=".2s"
         )
+        st.plotly_chart(fig_cat, use_container_width=True, key="rev_cat")
 
+    # Revenue by City
     with c2:
         st.markdown("#### Revenue by City (Top 10)")
         revenue_by_city = (
@@ -180,8 +183,9 @@ with tab1:
             title="Top 10 Cities by Revenue",
             text_auto=".2s"
         )
-        st.plotly_chart(fig_city, use_container_width=True)
+        st.plotly_chart(fig_city, use_container_width=True, key="rev_city")
 
+    # Monthly Trend
     st.markdown("#### Monthly Revenue Trend")
     revenue_over_time = (
         df_filtered.groupby("Month")["SalesRevenue"]
@@ -196,8 +200,9 @@ with tab1:
         markers=True,
         title="Monthly Revenue Trend"
     )
-    st.plotly_chart(fig_month, use_container_width=True)
+    st.plotly_chart(fig_month, use_container_width=True, key="rev_month")
 
+    # Top 15 Products
     st.markdown("#### Top 15 Products by Revenue")
     top_products = (
         df_filtered.groupby(["StockCode", "Description"])["SalesRevenue"]
@@ -209,12 +214,53 @@ with tab1:
     fig_prod = px.bar(
         top_products,
         x="Description",
-            y="SalesRevenue",
+        y="SalesRevenue",
         title="Top 15 Products by Revenue",
         text_auto=".2s"
     )
     fig_prod.update_layout(xaxis_tickangle=-45)
-    st.plotly_chart(fig_prod, use_container_width=True)
+    st.plotly_chart(fig_prod, use_container_width=True, key="top_15_products")
+
+    # =======================
+    # Pareto Chart
+    # =======================
+    st.markdown("#### Pareto Chart – Revenue Concentration (80/20 Rule)")
+
+    pareto_df = (
+        df_filtered.groupby(["StockCode", "Description"])["SalesRevenue"]
+        .sum()
+        .reset_index()
+        .sort_values("SalesRevenue", ascending=False)
+    )
+    pareto_df["cum_sum"] = pareto_df["SalesRevenue"].cumsum()
+    pareto_df["cum_pct"] = pareto_df["cum_sum"] / pareto_df["SalesRevenue"].sum() * 100
+
+    fig_pareto = px.bar(
+        pareto_df,
+        x="Description",
+        y="SalesRevenue",
+        title="Pareto Chart (80/20) – Product Revenue Contribution",
+    )
+
+    fig_pareto.add_scatter(
+        x=pareto_df["Description"],
+        y=pareto_df["cum_pct"],
+        mode="lines+markers",
+        name="Cumulative %",
+    )
+
+    fig_pareto.update_layout(
+        yaxis2=dict(
+            title="Cumulative %",
+            overlaying="y",
+            side="right",
+            range=[0, 110]
+        ),
+        xaxis_tickangle=-45
+    )
+
+    st.plotly_chart(fig_pareto, use_container_width=True, key="pareto_revenue")
+
 
 # -----------------------------
 # TAB 2: DESCRIPTIVE STATISTICS
