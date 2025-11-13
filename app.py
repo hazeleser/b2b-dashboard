@@ -222,24 +222,27 @@ with tab1:
     fig_prod.update_layout(xaxis_tickangle=-45)
     st.plotly_chart(fig_prod, use_container_width=True, key="top_15_products")
 
+        # =======================
+    # Pareto Chart – Top 10 Products
     # =======================
-    # Pareto Chart – Revenue
-    # =======================
-    st.markdown("#### Pareto Chart – Revenue Concentration (80/20 Rule)")
+    st.markdown("#### Pareto Chart – Top 10 Products by Revenue")
 
-    # 1) Ürün bazında revenue'u büyükten küçüğe sırala
+    top_n = 10  # istersen 5 / 15 yapabilirsin
+
+    # 1) Ürün bazında revenue'u büyükten küçüğe sırala ve Top N al
     pareto_df = (
         df_filtered.groupby(["StockCode", "Description"])["SalesRevenue"]
         .sum()
         .reset_index()
         .sort_values("SalesRevenue", ascending=False)
+        .head(top_n)
     )
 
-    # 2) Kümülatif toplam ve kümülatif yüzde
+    # 2) Kümülatif toplam ve kümülatif yüzde (sadece Top N içinde)
     pareto_df["cum_sum"] = pareto_df["SalesRevenue"].cumsum()
     pareto_df["cum_pct"] = pareto_df["cum_sum"] / pareto_df["SalesRevenue"].sum() * 100
 
-    # 3) Şekli oluştur: bar (left y-axis) + line (right y-axis)
+    # 3) Şekil: bar (sol eksen) + çizgi (sağ eksen)
     fig_pareto = go.Figure()
 
     # Barlar – revenue
@@ -261,14 +264,14 @@ with tab1:
     # 80% yatay çizgi (sağ eksende)
     fig_pareto.add_shape(
         type="line",
-        xref="paper", x0=0, x1=1,          # tüm grafiğin genişliği boyunca
+        xref="paper", x0=0, x1=1,          # grafiğin tamamı boyunca
         yref="y2",    y0=80, y1=80,        # %80 seviyesinde
         line=dict(color="green", dash="dash")
     )
 
-    # 4) Eksen ayarları ve görünüm
+    # 4) Layout / eksen ayarları
     fig_pareto.update_layout(
-        title="Pareto Chart (80/20) – Product Revenue Contribution",
+        title=f"Pareto Chart – Top {top_n} Products (80/20 View)",
         xaxis=dict(title="Products", tickangle=-45),
         yaxis=dict(title="Revenue"),
         yaxis2=dict(
@@ -281,6 +284,20 @@ with tab1:
     )
 
     st.plotly_chart(fig_pareto, use_container_width=True)
+
+    # 5) Mini tablo: her ürünün payını göster
+    st.markdown("##### Top 10 Product Contribution Table")
+    table_df = pareto_df.copy()
+    table_df["share_pct"] = table_df["SalesRevenue"] / table_df["SalesRevenue"].sum() * 100
+    table_df = table_df[["StockCode", "Description", "SalesRevenue", "cum_pct", "share_pct"]]
+    table_df.rename(columns={
+        "SalesRevenue": "Revenue",
+        "cum_pct": "Cumulative %",
+        "share_pct": "Share in Top 10 %"
+    }, inplace=True)
+
+    st.dataframe(table_df)
+
 
 
 # -----------------------------
