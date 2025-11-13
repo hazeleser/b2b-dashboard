@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 
-# -------- PAGE CONFIG (BOLD & PROFESSIONAL) --------
+# -------- PAGE CONFIG (LIGHT & CLEAN) --------
 st.set_page_config(
     page_title="B2B Intelligent Dashboard",
     page_icon="📊",
@@ -13,65 +13,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# -------- GLOBAL PLOTLY THEME --------
-pio.templates.default = "plotly_dark"
-px.defaults.color_discrete_sequence = ["#F97316", "#3B82F6", "#22C55E", "#E11D48", "#A855F7"]
+# Tek ve tutarlı renk paleti (mavi)
+PRIMARY_COLOR = "#2563EB"
+SECONDARY_COLOR = "#F97316"
 
-# -------- GLOBAL CSS (BACKGROUND, FONT, BOLD LOOK) --------
-st.markdown("""
-<style>
-/* Genel arka plan: koyu, profesyonel */
-.stApp {
-  background-color: #020617;
-}
-
-/* Sidebar arka plan */
-[data-testid="stSidebar"] {
-  background-color: #020617;
-}
-
-/* Başlık font ve renkleri */
-h1, h2, h3, h4 {
-  color: #F9FAFB;
-  font-weight: 700;
-}
-
-/* Normal metin */
-body, p, span, label {
-  color: #E5E7EB !important;
-}
-
-/* Sekme başlıkları */
-[data-baseweb="tab-list"] {
-  gap: 0.5rem;
-}
-[data-baseweb="tab"] {
-  background-color: #0F172A;
-  border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  color: #E5E7EB;
-  font-weight: 500;
-}
-[data-baseweb="tab"][aria-selected="true"] {
-  background-color: #F97316;
-  color: #0B1120;
-}
-
-/* Dataframe arka planını biraz daha okunur yapalım */
-[data-testid="stDataFrame"] {
-  background-color: #020617;
-}
-
-/* Scrollbar daha ince */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-</style>
-""", unsafe_allow_html=True)
+px.defaults.color_discrete_sequence = [PRIMARY_COLOR]
+pio.templates.default = "simple_white"
 
 
 st.title("📊 B2B Intelligent Sales Dashboard")
@@ -196,14 +143,6 @@ tab1, tab2, tab3, tab4 = st.tabs([
 # TAB 1: OVERVIEW & KPIs
 # -----------------------------
 with tab1:
-    st.subheader("📌 Key Performance Indicators (KPIs)")
-
-    total_revenue = df_filtered["SalesRevenue"].sum()
-    total_quantity = df_filtered["Quantity"].sum()
-    total_invoices = df_filtered["InvoiceNo"].nunique()
-    total_customers = df_filtered["CustomerID"].nunique()
-
-    st.caption("Key figures based on current filters.")
 
     st.subheader("📌 Key Performance Indicators (KPIs)")
     st.caption("All KPIs are calculated based on the current filters.")
@@ -265,12 +204,6 @@ with tab1:
     # Layout for charts
     c1, c2 = st.columns(2)
 
-    st.markdown("""
-    <div style="background:#0F172A;border-radius:10px;padding:10px 14px;margin-bottom:4px;
-                border:1px solid #1F2937;">
-        <span style="font-size:14px;color:#9CA3AF;">Revenue Breakdown</span>
-    </div>
-    """, unsafe_allow_html=True)
 
     # Revenue by Category
     with c1:
@@ -368,21 +301,22 @@ with tab1:
     # 3) Şekil: bar (sol eksen) + çizgi (sağ eksen)
     fig_pareto = go.Figure()
 
-    # Barlar – revenue
     fig_pareto.add_bar(
         x=pareto_df["Description"],
         y=pareto_df["SalesRevenue"],
-        name="Revenue"
+        name="Revenue",
+        marker_color=PRIMARY_COLOR
     )
 
-    # Kümülatif % çizgisi – sağ eksen
     fig_pareto.add_scatter(
         x=pareto_df["Description"],
         y=pareto_df["cum_pct"],
         mode="lines+markers",
         name="Cumulative %",
-        yaxis="y2"
+        yaxis="y2",
+        line=dict(color=SECONDARY_COLOR, width=2)
     )
+
 
     # 80% yatay çizgi (sağ eksende)
     fig_pareto.add_shape(
@@ -447,21 +381,22 @@ with tab1:
     # 3) Şekil: bar + çizgi (klasik Pareto)
     fig_top_cat = go.Figure()
 
-    # Barlar – kategori revenue
     fig_top_cat.add_bar(
         x=pareto_cat["Category"],
         y=pareto_cat["SalesRevenue"],
-        name="Revenue"
+        name="Revenue",
+        marker_color=PRIMARY_COLOR
     )
 
-    # Kümülatif % çizgisi – sağ eksen
     fig_top_cat.add_scatter(
         x=pareto_cat["Category"],
         y=pareto_cat["cum_pct"],
         mode="lines+markers",
         name="Cumulative %",
-        yaxis="y2"
+        yaxis="y2",
+        line=dict(color=SECONDARY_COLOR, width=2)
     )
+
 
     # 80% yatay çizgi
     fig_top_cat.add_shape(
