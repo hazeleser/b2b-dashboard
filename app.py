@@ -222,44 +222,64 @@ with tab1:
     st.plotly_chart(fig_prod, use_container_width=True, key="top_15_products")
 
     # =======================
-    # Pareto Chart
+    # Pareto Chart – Revenue
     # =======================
     st.markdown("#### Pareto Chart – Revenue Concentration (80/20 Rule)")
 
+    # 1) Ürün bazında revenue'u büyükten küçüğe sırala
     pareto_df = (
         df_filtered.groupby(["StockCode", "Description"])["SalesRevenue"]
         .sum()
         .reset_index()
         .sort_values("SalesRevenue", ascending=False)
     )
+
+    # 2) Kümülatif toplam ve kümülatif yüzde
     pareto_df["cum_sum"] = pareto_df["SalesRevenue"].cumsum()
     pareto_df["cum_pct"] = pareto_df["cum_sum"] / pareto_df["SalesRevenue"].sum() * 100
 
-    fig_pareto = px.bar(
-        pareto_df,
-        x="Description",
-        y="SalesRevenue",
-        title="Pareto Chart (80/20) – Product Revenue Contribution",
+    # 3) Şekli oluştur: bar (left y-axis) + line (right y-axis)
+    fig_pareto = go.Figure()
+
+    # Barlar – revenue
+    fig_pareto.add_bar(
+        x=pareto_df["Description"],
+        y=pareto_df["SalesRevenue"],
+        name="Revenue"
     )
 
+    # Kümülatif % çizgisi – sağ eksen
     fig_pareto.add_scatter(
         x=pareto_df["Description"],
         y=pareto_df["cum_pct"],
         mode="lines+markers",
         name="Cumulative %",
+        yaxis="y2"
     )
 
+    # 80% yatay çizgi (sağ eksende)
+    fig_pareto.add_shape(
+        type="line",
+        xref="paper", x0=0, x1=1,          # tüm grafiğin genişliği boyunca
+        yref="y2",    y0=80, y1=80,        # %80 seviyesinde
+        line=dict(color="green", dash="dash")
+    )
+
+    # 4) Eksen ayarları ve görünüm
     fig_pareto.update_layout(
+        title="Pareto Chart (80/20) – Product Revenue Contribution",
+        xaxis=dict(title="Products", tickangle=-45),
+        yaxis=dict(title="Revenue"),
         yaxis2=dict(
             title="Cumulative %",
             overlaying="y",
             side="right",
             range=[0, 110]
         ),
-        xaxis_tickangle=-45
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
 
-    st.plotly_chart(fig_pareto, use_container_width=True, key="pareto_revenue")
+    st.plotly_chart(fig_pareto, use_container_width=True)
 
 
 # -----------------------------
