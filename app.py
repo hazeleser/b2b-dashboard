@@ -250,6 +250,53 @@ with tab2:
     st.plotly_chart(fig_box, use_container_width=True)
 
     st.plotly_chart(fig_prod, use_container_width=True)
+    # =======================
+# Pareto Chart (Revenue)
+# =======================
+
+st.markdown("### Pareto Chart – Revenue Concentration (80/20 Rule)")
+
+# Revenue by product
+pareto_df = (
+    df_filtered.groupby(["StockCode", "Description"])["SalesRevenue"]
+    .sum()
+    .reset_index()
+    .sort_values("SalesRevenue", ascending=False)
+)
+
+# cumulative sum
+pareto_df["cum_sum"] = pareto_df["SalesRevenue"].cumsum()
+pareto_df["cum_pct"] = pareto_df["cum_sum"] / pareto_df["SalesRevenue"].sum() * 100
+
+# Plot
+fig = px.bar(
+    pareto_df,
+    x="Description",
+    y="SalesRevenue",
+    title="Pareto Chart (80/20) – Product Revenue Contribution",
+)
+
+fig.add_scatter(
+    x=pareto_df["Description"],
+    y=pareto_df["cum_pct"],
+    mode="lines+markers",
+    name="Cumulative %",
+    yaxis="y2"
+)
+
+# Add secondary axis
+fig.update_layout(
+    yaxis2=dict(
+        title="Cumulative %",
+        overlaying="y",
+        side="right",
+        range=[0, 110]
+    ),
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
 
 # -----------------------------
 # TAB 3: ABC–XYZ ANALYSIS
