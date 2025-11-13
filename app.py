@@ -203,7 +203,6 @@ tab1, tab2, tab3, tab4 = st.tabs([
 # TAB 1: OVERVIEW & KPIs
 # -----------------------------
 with tab1:
-
     st.subheader("📌 Key Performance Indicators (KPIs)")
     st.caption("All KPIs are calculated based on the current filters.")
 
@@ -216,10 +215,14 @@ with tab1:
 
     with kpi1:
         st.markdown(f"""
-        <div style="background:linear-gradient(135deg,#F97316,#EA580C);
-                    padding:16px;border-radius:14px;">
-            <div style="font-size:13px;color:#FFF;font-weight:500;">Total Revenue</div>
-            <div style="font-size:22px;color:#FFF;font-weight:700;margin-top:4px;">
+        <div style="background-color:#FFFFFF;
+                    padding:16px;border-radius:12px;
+                    border:1px solid #E5E7EB;
+                    box-shadow:0 4px 10px rgba(15,23,42,0.06);">
+            <div style="font-size:13px;color:#6B7280;font-weight:500;">
+                Total Revenue
+            </div>
+            <div style="font-size:22px;color:#111827;font-weight:700;margin-top:4px;">
                 {total_revenue:,.2f} ₺
             </div>
         </div>
@@ -227,10 +230,14 @@ with tab1:
 
     with kpi2:
         st.markdown(f"""
-        <div style="background:#0F172A;padding:16px;border-radius:14px;
-                    border:1px solid #1E293B;">
-            <div style="font-size:13px;color:#9CA3AF;font-weight:500;">Total Quantity</div>
-            <div style="font-size:22px;color:#E5E7EB;font-weight:700;margin-top:4px;">
+        <div style="background-color:#FFFFFF;
+                    padding:16px;border-radius:12px;
+                    border:1px solid #E5E7EB;
+                    box-shadow:0 4px 10px rgba(15,23,42,0.06);">
+            <div style="font-size:13px;color:#6B7280;font-weight:500;">
+                Total Quantity
+            </div>
+            <div style="font-size:22px;color:#111827;font-weight:700;margin-top:4px;">
                 {total_quantity:,.0f}
             </div>
         </div>
@@ -238,10 +245,14 @@ with tab1:
 
     with kpi3:
         st.markdown(f"""
-        <div style="background:#0F172A;padding:16px;border-radius:14px;
-                    border:1px solid #1E293B;">
-            <div style="font-size:13px;color:#9CA3AF;font-weight:500;">Number of Invoices</div>
-            <div style="font-size:22px;color:#E5E7EB;font-weight:700;margin-top:4px;">
+        <div style="background-color:#FFFFFF;
+                    padding:16px;border-radius:12px;
+                    border:1px solid #E5E7EB;
+                    box-shadow:0 4px 10px rgba(15,23,42,0.06);">
+            <div style="font-size:13px;color:#6B7280;font-weight:500;">
+                Number of Invoices
+            </div>
+            <div style="font-size:22px;color:#111827;font-weight:700;margin-top:4px;">
                 {total_invoices:,}
             </div>
         </div>
@@ -249,10 +260,14 @@ with tab1:
 
     with kpi4:
         st.markdown(f"""
-        <div style="background:#0F172A;padding:16px;border-radius:14px;
-                    border:1px solid #1E293B;">
-            <div style="font-size:13px;color:#9CA3AF;font-weight:500;">Number of Customers</div>
-            <div style="font-size:22px;color:#E5E7EB;font-weight:700;margin-top:4px;">
+        <div style="background-color:#FFFFFF;
+                    padding:16px;border-radius:12px;
+                    border:1px solid #E5E7EB;
+                    box-shadow:0 4px 10px rgba(15,23,42,0.06);">
+            <div style="font-size:13px;color:#6B7280;font-weight:500;">
+                Number of Customers
+            </div>
+            <div style="font-size:22px;color:#111827;font-weight:700;margin-top:4px;">
                 {total_customers:,}
             </div>
         </div>
