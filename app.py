@@ -103,6 +103,11 @@ df_filtered = df[
     (df["City"].isin(cities))
 ].copy()
 
+# ---- FIX: Prevent mixed-type errors in groupby ----
+df_filtered["StockCode"] = df_filtered["StockCode"].astype(str)
+df_filtered["Description"] = df_filtered["Description"].astype(str)
+df_filtered["SalesRevenue"] = pd.to_numeric(df_filtered["SalesRevenue"], errors="coerce")
+
 st.markdown("### ℹ️ Current filter summary")
 st.write(
     f"Date range: **{start_date}** → **{end_date}**  |  "
