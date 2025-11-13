@@ -249,14 +249,7 @@ with tab2:
     )
     st.plotly_chart(fig_box, use_container_width=True)
 
-st.plotly_chart(fig_prod, use_container_width=True)
-
-# =======================
-# Pareto Chart (Revenue)
-# =======================
-
- ... (yukarıdaki pareto kodum) ...
-
+    st.plotly_chart(fig_prod, use_container_width=True)
 
 # -----------------------------
 # TAB 3: ABC–XYZ ANALYSIS
