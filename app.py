@@ -361,7 +361,7 @@ with tab1:
     )
 
     # 4) Layout
-   fig_top_cat.update_layout(
+    fig_top_cat.update_layout(
     template="simple_white",
     title=f"Pareto Chart – Top {top_cat_n} Categories (80/20 Rule)",
     xaxis=dict(title="Category"),
