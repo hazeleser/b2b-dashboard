@@ -299,16 +299,19 @@ with tab1:
     st.dataframe(table_df)
 
     # =======================
-    # Pareto Chart – Categories
+    # Pareto Chart – Top Categories
     # =======================
-    st.markdown("#### Pareto Chart – Categories by Revenue")
+    st.markdown("#### Pareto Chart – Top 10 Categories by Revenue")
 
-    # 1) Kategori bazında revenue’u büyükten küçüğe sırala
+    top_cat_n = 10   # burayı değiştirebilirsin: 3, 4, 6...
+
+    # 1) Kategori bazında revenue’u büyükten küçüğe sırala ve Top N al
     pareto_cat = (
         df_filtered.groupby("Category")["SalesRevenue"]
         .sum()
         .reset_index()
         .sort_values("SalesRevenue", ascending=False)
+        .head(top_cat_n)
     )
 
     # 2) Kümülatif toplam ve yüzde
@@ -316,17 +319,17 @@ with tab1:
     pareto_cat["cum_pct"] = pareto_cat["cum_sum"] / pareto_cat["SalesRevenue"].sum() * 100
 
     # 3) Şekil: bar + çizgi (klasik Pareto)
-    fig_pareto_cat = go.Figure()
+    fig_top_cat = go.Figure()
 
     # Barlar – kategori revenue
-    fig_pareto_cat.add_bar(
+    fig_top_cat.add_bar(
         x=pareto_cat["Category"],
         y=pareto_cat["SalesRevenue"],
         name="Revenue"
     )
 
     # Kümülatif % çizgisi – sağ eksen
-    fig_pareto_cat.add_scatter(
+    fig_top_cat.add_scatter(
         x=pareto_cat["Category"],
         y=pareto_cat["cum_pct"],
         mode="lines+markers",
@@ -335,16 +338,16 @@ with tab1:
     )
 
     # 80% yatay çizgi
-    fig_pareto_cat.add_shape(
+    fig_top_cat.add_shape(
         type="line",
-        xref="paper", x0=0, x1=1,          # tüm grafik boyunca
-        yref="y2",    y0=80, y1=80,        # %80 seviyesinde
+        xref="paper", x0=0, x1=1,
+        yref="y2",    y0=80, y1=80,
         line=dict(color="green", dash="dash")
     )
 
     # 4) Layout
-    fig_pareto_cat.update_layout(
-        title="Pareto Chart – Categories (80/20 Rule)",
+    fig_top_cat.update_layout(
+        title=f"Pareto Chart – Top {top_cat_n} Categories (80/20 Rule)",
         xaxis=dict(title="Category"),
         yaxis=dict(title="Revenue"),
         yaxis2=dict(
@@ -356,7 +359,7 @@ with tab1:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
 
-    st.plotly_chart(fig_pareto_cat, use_container_width=True)
+    st.plotly_chart(fig_top_cat, use_container_width=True)
 
 
 # -----------------------------
